@@ -1,8 +1,9 @@
 const express = require('express');
-const { cadastro } = require('../controllers/profissionais');
+const { cadastro, login } = require('../controllers/profissionais');
 
 const route = express()
 
 route.post('/profissional', cadastro)
+route.post('/login', login)
 
 module.exports = route
