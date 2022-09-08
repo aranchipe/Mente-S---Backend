@@ -6,7 +6,7 @@ const { schemaLogin } = require('../validations/schemaLogin')
 const jwt = require('jsonwebtoken');
 
 
-const cadastro = async (req, res) => {
+const cadastroProfissional = async (req, res) => {
     const { nome, email, senha } = req.body
 
     if (!nome || !email || !senha) {
@@ -96,7 +96,8 @@ const login = async (req, res) => {
     }
 }
 
+
 module.exports = {
-    cadastro,
+    cadastroProfissional,
     login
 }
