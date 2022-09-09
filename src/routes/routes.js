@@ -1,5 +1,5 @@
 const express = require('express');
-const { cadastroPaciente, listarPacientes } = require('../controllers/pacientes');
+const { cadastroPaciente, listarPacientes, detalharPaciente, deletarPaciente, atualizarPaciente } = require('../controllers/pacientes');
 const { login, cadastroProfissional } = require('../controllers/profissionais');
 const { verificarLogin } = require('../middlewares/verificarLogin');
 
@@ -12,5 +12,8 @@ route.use(verificarLogin)
 
 route.post('/paciente', cadastroPaciente)
 route.get('/paciente', listarPacientes)
+route.get('/paciente/:id', detalharPaciente)
+route.put('/paciente/:id', atualizarPaciente)
+route.delete('/paciente/:id', deletarPaciente)
 
 module.exports = route
