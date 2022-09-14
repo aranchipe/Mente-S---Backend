@@ -1,0 +1,188 @@
+const knex = require('../database/connection');
+const { schemaCadastroSessao } = require('../validations/schemaCadastroSessao')
+
+const cadastroSessao = async (req, res) => {
+    const { paciente_id, data, status, tema, duracao, tipo } = req.body
+    const { profissional } = req
+
+    try {
+        await schemaCadastroSessao.validate(req.body)
+
+        const pacienteEncontrado = await knex('pacientes')
+            .where({ id: paciente_id })
+            .andWhere({ profissional_id: profissional.id })
+
+        if (pacienteEncontrado.length === 0) {
+            return res.status(404).json({ "mensagem": "paciente não encontrado" })
+
+        }
+
+        const sessaoCadastrada = await knex('sessoes').insert({
+            profissional_id: profissional.id,
+            paciente_id,
+            data,
+            status,
+            tema,
+            duracao,
+            tipo
+        })
+
+        if (sessaoCadastrada.length === 0) {
+            return res.status(400).json({ "mensagem": "Não foi possível cadastrar a sessão" })
+        }
+
+        return res.status(200).json({ "mensagem": "Sessão cadastrada com sucesso" })
+    } catch (error) {
+        return res.status(500).json({ "mensagem": error.message });
+
+    }
+
+
+}
+
+const listarSessoes = async (req, res) => {
+    const { profissional } = req
+
+    try {
+        const sessoes = await knex('sessoes')
+            .select(
+                's.id',
+                'p.nome as paciente',
+                's.data',
+                's.status',
+                's.tema',
+                's.duracao',
+                's.tipo'
+            )
+            .from('sessoes as s')
+            .leftJoin('pacientes as p', 'p.id', 's.paciente_id')
+            .orderBy('s.id', 'asc')
+            .where('s.profissional_id', profissional.id)
+
+        if (sessoes.length === 0) {
+            return res.status(404).json({ "mensagem": "Nenhuma sessão encontrada" })
+        }
+
+        return res.status(200).json(sessoes)
+
+    } catch (error) {
+        return res.status(500).json({ "mensagem": error.message });
+
+    }
+}
+
+const detalharSessao = async (req, res) => {
+    const { profissional } = req
+    const { id } = req.params
+
+    try {
+        const sessaoEncontrada = await knex('sessoes')
+            .select(
+                's.id',
+                'p.nome as paciente',
+                's.data',
+                's.status',
+                's.tema',
+                's.duracao',
+                's.tipo'
+            )
+            .from('sessoes as s')
+            .leftJoin('pacientes as p', 'p.id', 's.paciente_id')
+            .where('s.id', id)
+            .andWhere('s.profissional_id', profissional.id)
+            .first()
+
+        if (!sessaoEncontrada) {
+            return res.status(404).json({ "mensagem": "Sessão não encontrada" })
+        }
+
+        return res.status(200).json(sessaoEncontrada)
+
+    } catch (error) {
+        return res.status(500).json({ "mensagem": error.message });
+
+    }
+}
+
+const atualizarSessao = async (req, res) => {
+    const { id } = req.params;
+    const { paciente_id, data, status, tema, duracao, tipo } = req.body;
+    const { profissional } = req;
+
+    try {
+        schemaCadastroSessao.validate(req.body);
+
+        const sessaoEncontrada = await knex('sessoes')
+            .where({ id })
+            .andWhere({ profissional_id: profissional.id });
+
+        if (sessaoEncontrada.length === 0) {
+            return res.status(404).json({ "mensagem": "Sessão não encontrada" });
+        }
+
+        const pacienteEncontrado = await knex('pacientes')
+            .where({ id: paciente_id })
+            .andWhere({ profissional_id: profissional.id });
+
+        if (pacienteEncontrado.length === 0) {
+            return res.status(404).json({ "mensagem": "Paciente não encontrado" });
+        }
+
+
+        const sessaoAtualizada = await knex('sessoes')
+            .update({
+                paciente_id,
+                data,
+                status,
+                tema,
+                duracao,
+                tipo
+            })
+            .where({ id });
+
+        if (sessaoAtualizada.length === 0) {
+            return res.status(400).json({ "mensagem": "Não foi possível atualizar a sessão" });
+        }
+
+        return res.status(200).json({ "mensagem": "Sessão atualizada com sucesso" })
+
+    } catch (error) {
+        return res.status(500).json({ "mensagem": error.message });
+
+    }
+}
+
+const deletarSessao = async (req, res) => {
+    const { id } = req.params;
+    const { profissional } = req;
+
+    try {
+
+        const sessaoEncontrada = await knex('sessoes')
+            .where({ id })
+            .andWhere({ profissional_id: profissional.id });
+
+        if (sessaoEncontrada.length === 0) {
+            return res.status(404).json({ "mensagem": "Sessão não encontrada" });
+        }
+
+        const sessaoDeletada = await knex('sessoes').del().where({ id });
+
+        if (sessaoDeletada.length === 0) {
+            return res.status(400).json({ "mensagem": "Não foi possível excluir a sessão" });
+        }
+
+        return res.status(200).json({ "mensagem": "Sessão excluída com sucesso" });
+
+    } catch (error) {
+        return res.status(500).json({ "mensagem": error.message });
+
+    }
+}
+module.exports = {
+    cadastroSessao,
+    listarSessoes,
+    detalharSessao,
+    atualizarSessao,
+    deletarSessao
+}

@@ -1,6 +1,7 @@
 const express = require('express');
 const { cadastroPaciente, listarPacientes, detalharPaciente, deletarPaciente, atualizarPaciente } = require('../controllers/pacientes');
 const { login, cadastroProfissional } = require('../controllers/profissionais');
+const { cadastroSessao, listarSessoes, detalharSessao, atualizarSessao, deletarSessao } = require('../controllers/sessoes');
 const { verificarLogin } = require('../middlewares/verificarLogin');
 
 const route = express()
@@ -15,5 +16,11 @@ route.get('/paciente', listarPacientes)
 route.get('/paciente/:id', detalharPaciente)
 route.put('/paciente/:id', atualizarPaciente)
 route.delete('/paciente/:id', deletarPaciente)
+
+route.post('/sessao', cadastroSessao)
+route.get('/sessao', listarSessoes)
+route.get('/sessao/:id', detalharSessao)
+route.put('/sessao/:id', atualizarSessao)
+route.delete('/sessao/:id', deletarSessao)
 
 module.exports = route
