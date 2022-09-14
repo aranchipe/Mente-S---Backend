@@ -19,7 +19,7 @@ const cadastroProfissional = async (req, res) => {
         const profissionalEncontrado = await knex('profissionais').where({ email })
 
         if (profissionalEncontrado.length > 0) {
-            return res.status(400).json('Usuário já cadastrado')
+            return res.status(400).json({ "mensagem": "Usuário já cadastrado" })
         }
 
         const hash = (await pwd.hash(Buffer.from(senha))).toString('hex');
