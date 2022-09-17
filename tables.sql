@@ -19,3 +19,14 @@ create table pacientes (
   email text not null unique,
   telefone text not null unique
 )
+
+create table sessoes (
+  id serial primary key,
+  profissional_id integer not null references profissionais(id),
+  paciente_id integer not null references pacientes(id),
+  data timestamp not null default now(),
+  status text not null,
+  tema text default null,
+  duracao time default '00:00',
+  tipo text not null
+)
