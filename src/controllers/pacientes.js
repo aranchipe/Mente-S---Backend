@@ -106,7 +106,6 @@ const detalharPaciente = async (req, res) => {
 
     try {
         const paciente = await knex('pacientes').where({ id }).andWhere({ profissional_id: profissional.id }).first()
-        console.log(paciente)
 
         if (!paciente) {
             return res.status(404).json({ "mensagem": "Paciente não encontrado" })

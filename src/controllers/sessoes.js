@@ -42,8 +42,73 @@ const cadastroSessao = async (req, res) => {
 
 const listarSessoes = async (req, res) => {
     const { profissional } = req
+    const { page, size } = req.query
 
     try {
+
+        if (page && size) {
+            const sessoes = await knex('sessoes')
+                .select(
+                    's.id',
+                    'p.nome as paciente',
+                    's.data',
+                    's.status',
+                    's.tema',
+                    's.duracao',
+                    's.tipo'
+                )
+                .from('sessoes as s')
+                .leftJoin('pacientes as p', 'p.id', 's.paciente_id')
+                .orderBy('s.id', 'asc')
+                .where('s.profissional_id', profissional.id)
+                .offset((Number(page) - 1) * size)
+                .limit(size)
+
+            return res.status(200).json(sessoes)
+        }
+
+        if (size) {
+            const sessoes = await knex('sessoes')
+                .select(
+                    's.id',
+                    'p.nome as paciente',
+                    's.data',
+                    's.status',
+                    's.tema',
+                    's.duracao',
+                    's.tipo'
+                )
+                .from('sessoes as s')
+                .leftJoin('pacientes as p', 'p.id', 's.paciente_id')
+                .orderBy('s.id', 'asc')
+                .where('s.profissional_id', profissional.id)
+                .offset(0)
+                .limit(size)
+
+            return res.status(200).json(sessoes)
+        }
+
+        if (page) {
+            const sessoes = await knex('sessoes')
+                .select(
+                    's.id',
+                    'p.nome as paciente',
+                    's.data',
+                    's.status',
+                    's.tema',
+                    's.duracao',
+                    's.tipo'
+                )
+                .from('sessoes as s')
+                .leftJoin('pacientes as p', 'p.id', 's.paciente_id')
+                .orderBy('s.id', 'asc')
+                .where('s.profissional_id', profissional.id)
+                .offset((Number(page) - 1) * 6)
+                .limit(6)
+
+            return res.status(200).json(sessoes)
+        }
+
         const sessoes = await knex('sessoes')
             .select(
                 's.id',
