@@ -64,6 +64,10 @@ const listarSessoes = async (req, res) => {
                 .offset((Number(page) - 1) * size)
                 .limit(size)
 
+            if (sessoes.length === 0) {
+                return res.status(404).json({ "mensagem": "Nenhuma sessão encontrada" })
+            }
+
             return res.status(200).json(sessoes)
         }
 
@@ -85,6 +89,10 @@ const listarSessoes = async (req, res) => {
                 .offset(0)
                 .limit(size)
 
+            if (sessoes.length === 0) {
+                return res.status(404).json({ "mensagem": "Nenhuma sessão encontrada" })
+            }
+
             return res.status(200).json(sessoes)
         }
 
@@ -105,6 +113,10 @@ const listarSessoes = async (req, res) => {
                 .where('s.profissional_id', profissional.id)
                 .offset((Number(page) - 1) * 6)
                 .limit(6)
+
+            if (sessoes.length === 0) {
+                return res.status(404).json({ "mensagem": "Nenhuma sessão encontrada" })
+            }
 
             return res.status(200).json(sessoes)
         }

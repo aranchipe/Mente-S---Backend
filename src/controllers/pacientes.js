@@ -74,8 +74,92 @@ const cadastroPaciente = async (req, res) => {
 
 const listarPacientes = async (req, res) => {
     const { profissional } = req
+    const { page, size } = req.query
 
     try {
+
+        if (page && size) {
+            const pacientes = await knex('pacientes')
+                .select(
+                    'pa.id',
+                    'pr.nome as profissional',
+                    'pa.nome',
+                    'pa.data_nascimento',
+                    'pa.cpf',
+                    'pa.genero',
+                    'pa.endereco',
+                    'pa.email',
+                    'pa.telefone'
+                )
+                .from('pacientes as pa')
+                .leftJoin('profissionais as pr', 'pr.id', 'pa.profissional_id')
+                .orderBy('pa.id', 'asc')
+                .where({ profissional_id: profissional.id })
+                .offset((Number(page) - 1) * size)
+                .limit(size)
+
+            if (pacientes.length === 0) {
+                return res.status(404).json({ "mensagem": "Nenhuma paciente encontrada" })
+            }
+
+            return res.status(200).json(pacientes)
+        }
+
+        if (size) {
+            const pacientes = await knex('pacientes')
+                .select(
+                    'pa.id',
+                    'pr.nome as profissional',
+                    'pa.nome',
+                    'pa.data_nascimento',
+                    'pa.cpf',
+                    'pa.genero',
+                    'pa.endereco',
+                    'pa.email',
+                    'pa.telefone'
+                )
+                .from('pacientes as pa')
+                .leftJoin('profissionais as pr', 'pr.id', 'pa.profissional_id')
+                .orderBy('pa.id', 'asc')
+                .where({ profissional_id: profissional.id })
+                .offset(0)
+                .limit(size)
+
+            if (pacientes.length === 0) {
+                return res.status(404).json({ "mensagem": "Nenhuma paciente encontrada" })
+            }
+
+            return res.status(200).json(pacientes)
+        }
+
+        if (page) {
+            const pacientes = await knex('pacientes')
+                .select(
+                    'pa.id',
+                    'pr.nome as profissional',
+                    'pa.nome',
+                    'pa.data_nascimento',
+                    'pa.cpf',
+                    'pa.genero',
+                    'pa.endereco',
+                    'pa.email',
+                    'pa.telefone'
+                )
+                .from('pacientes as pa')
+                .leftJoin('profissionais as pr', 'pr.id', 'pa.profissional_id')
+                .orderBy('pa.id', 'asc')
+                .where({ profissional_id: profissional.id })
+                .offset((Number(page) - 1) * 6)
+                .limit(6)
+
+            if (pacientes.length === 0) {
+                return res.status(404).json({ "mensagem": "Nenhuma paciente encontrada" })
+            }
+
+            return res.status(200).json(pacientes)
+        }
+
+
         const pacientes = await knex('pacientes')
             .select(
                 'pa.id',
@@ -90,8 +174,12 @@ const listarPacientes = async (req, res) => {
             )
             .from('pacientes as pa')
             .leftJoin('profissionais as pr', 'pr.id', 'pa.profissional_id')
+            .orderBy('pa.id', 'asc')
             .where({ profissional_id: profissional.id })
 
+        if (pacientes.length === 0) {
+            return res.status(404).json({ "mensagem": "Nenhuma paciente encontrada" })
+        }
 
         return res.status(200).json(pacientes)
     } catch (error) {
