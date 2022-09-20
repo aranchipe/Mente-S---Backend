@@ -49,6 +49,7 @@ const cadastroSessao = async (req, res) => {
 const listarSessoes = async (req, res) => {
     const { profissional } = req
     const { page, size } = req.query
+    const now = new Date()
 
     try {
 
@@ -146,6 +147,13 @@ const listarSessoes = async (req, res) => {
             return res.status(404).json({ "mensagem": "Nenhuma sessão encontrada" })
         }
 
+        sessoes.map(async (item) => {
+            if ((+new Date(item.data) + 86399000) < +now && item.status === 'Agendado') {
+                await knex('sessoes').update({
+                    status: 'Cancelado'
+                }).where({ id: item.id })
+            }
+        })
         return res.status(200).json(sessoes)
 
     } catch (error) {
