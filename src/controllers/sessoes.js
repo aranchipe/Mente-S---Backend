@@ -2,8 +2,14 @@ const knex = require('../database/connection');
 const { schemaCadastroSessao } = require('../validations/schemaCadastroSessao')
 
 const cadastroSessao = async (req, res) => {
-    const { paciente_id, data, status, tema, duracao, tipo } = req.body
+    let { paciente_id, data, status, tema, duracao, tipo } = req.body
     const { profissional } = req
+
+    const dataAtual = new Date()
+    if ((+new Date(data) + 86399000) < +dataAtual && status === 'Agendado') {
+        status = 'Cancelado'
+    }
+
 
     try {
         await schemaCadastroSessao.validate(req.body)
