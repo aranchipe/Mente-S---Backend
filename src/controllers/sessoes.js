@@ -58,6 +58,7 @@ const listarSessoes = async (req, res) => {
                 .select(
                     's.id',
                     'p.nome as paciente',
+                    'p.id as paciente_id',
                     's.data',
                     's.status',
                     's.tema',
@@ -83,6 +84,7 @@ const listarSessoes = async (req, res) => {
                 .select(
                     's.id',
                     'p.nome as paciente',
+                    'p.id as paciente_id',
                     's.data',
                     's.status',
                     's.tema',
@@ -108,6 +110,7 @@ const listarSessoes = async (req, res) => {
                 .select(
                     's.id',
                     'p.nome as paciente',
+                    'p.id as paciente_id',
                     's.data',
                     's.status',
                     's.tema',
@@ -132,6 +135,7 @@ const listarSessoes = async (req, res) => {
             .select(
                 's.id',
                 'p.nome as paciente',
+                'p.id as paciente_id',
                 's.data',
                 's.status',
                 's.tema',
