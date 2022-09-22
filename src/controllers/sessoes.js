@@ -274,10 +274,33 @@ const deletarSessao = async (req, res) => {
 
     }
 }
+
+const deletarSessoesDoPaciente = async (req, res) => {
+    const { paciente_id } = req.params
+    const { profissional } = req
+
+    try {
+        const sessoes = await knex('sessoes').where({ paciente_id })
+
+        const sessoesDeletadas = await knex('sessoes').del().where({ paciente_id })
+
+        if (sessoesDeletadas.length === 0) {
+            return res.status(404).json({ "mensagem": "Não foi possível deletar as sessoes" })
+
+        }
+
+        res.status(200).json({ "mensagem": "Sessões excluídas com sucesso" })
+    } catch (error) {
+        return res.status(500).json({ "mensagem": error.message });
+
+    }
+}
+
 module.exports = {
     cadastroSessao,
     listarSessoes,
     detalharSessao,
     atualizarSessao,
-    deletarSessao
+    deletarSessao,
+    deletarSessoesDoPaciente
 }
