@@ -5,12 +5,6 @@ const cadastroSessao = async (req, res) => {
     let { paciente_id, data, status, tema, duracao, tipo } = req.body
     const { profissional } = req
 
-    const dataAtual = new Date()
-    if ((+new Date(+data + 10800000)) < +dataAtual && status === 'Agendado') {
-        status = 'Expirado'
-    }
-
-
     try {
         await schemaCadastroSessao.validate(req.body)
 
@@ -152,7 +146,7 @@ const listarSessoes = async (req, res) => {
         }
 
         sessoes.map(async (item) => {
-            if ((+new Date(item.data)) < +now && item.status === 'Agendado') {
+            if ((+new Date(item.data) + 10800000) < +now && item.status === 'Agendado') {
                 await knex('sessoes').update({
                     status: 'Expirado'
                 }).where({ id: item.id })
