@@ -66,9 +66,7 @@ const listarSessoes = async (req, res) => {
                 .offset((Number(page) - 1) * size)
                 .limit(size)
 
-            if (sessoes.length === 0) {
-                return res.status(404).json({ "mensagem": "Nenhuma sessão encontrada" })
-            }
+
 
             return res.status(200).json(sessoes)
         }
@@ -92,9 +90,7 @@ const listarSessoes = async (req, res) => {
                 .offset(0)
                 .limit(size)
 
-            if (sessoes.length === 0) {
-                return res.status(404).json({ "mensagem": "Nenhuma sessão encontrada" })
-            }
+
 
             return res.status(200).json(sessoes)
         }
@@ -118,9 +114,7 @@ const listarSessoes = async (req, res) => {
                 .offset((Number(page) - 1) * 6)
                 .limit(6)
 
-            if (sessoes.length === 0) {
-                return res.status(404).json({ "mensagem": "Nenhuma sessão encontrada" })
-            }
+
 
             return res.status(200).json(sessoes)
         }
@@ -141,9 +135,6 @@ const listarSessoes = async (req, res) => {
             .orderBy('s.id', 'asc')
             .where('s.profissional_id', profissional.id)
 
-        if (sessoes.length === 0) {
-            return res.status(404).json({ "mensagem": "Nenhuma sessão encontrada" })
-        }
 
         sessoes.map(async (item) => {
             if ((+new Date(item.data) + 10800000) < +now && item.status === 'Agendado') {
