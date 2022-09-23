@@ -6,8 +6,8 @@ const cadastroSessao = async (req, res) => {
     const { profissional } = req
 
     const dataAtual = new Date()
-    if ((+new Date(data) + 86399000) < +dataAtual && status === 'Agendado') {
-        status = 'Cancelado'
+    if ((+new Date(data)) < +dataAtual && status === 'Agendado') {
+        status = 'Expirado'
     }
 
 
@@ -152,9 +152,9 @@ const listarSessoes = async (req, res) => {
         }
 
         sessoes.map(async (item) => {
-            if ((+new Date(item.data) + 86399000) < +now && item.status === 'Agendado') {
+            if ((+new Date(item.data)) < +now && item.status === 'Agendado') {
                 await knex('sessoes').update({
-                    status: 'Cancelado'
+                    status: 'Expirado'
                 }).where({ id: item.id })
             }
         })
