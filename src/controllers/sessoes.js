@@ -6,7 +6,7 @@ const cadastroSessao = async (req, res) => {
     const { profissional } = req
 
     const dataAtual = new Date()
-    if ((+new Date(data) + 10800000) < +dataAtual && status === 'Agendado') {
+    if ((+new Date(+data + 10800000)) < +dataAtual && status === 'Agendado') {
         status = 'Expirado'
     }
 
