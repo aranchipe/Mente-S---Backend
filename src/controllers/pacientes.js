@@ -98,9 +98,7 @@ const listarPacientes = async (req, res) => {
                 .offset((Number(page) - 1) * size)
                 .limit(size)
 
-            if (pacientes.length === 0) {
-                return res.status(404).json({ "mensagem": "Nenhuma paciente encontrada" })
-            }
+
 
             return res.status(200).json(pacientes)
         }
@@ -125,9 +123,7 @@ const listarPacientes = async (req, res) => {
                 .offset(0)
                 .limit(size)
 
-            if (pacientes.length === 0) {
-                return res.status(404).json({ "mensagem": "Nenhuma paciente encontrada" })
-            }
+
 
             return res.status(200).json(pacientes)
         }
@@ -152,9 +148,7 @@ const listarPacientes = async (req, res) => {
                 .offset((Number(page) - 1) * 6)
                 .limit(6)
 
-            if (pacientes.length === 0) {
-                return res.status(404).json({ "mensagem": "Nenhuma paciente encontrada" })
-            }
+
 
             return res.status(200).json(pacientes)
         }
@@ -177,9 +171,7 @@ const listarPacientes = async (req, res) => {
             .orderBy('pa.id', 'asc')
             .where({ profissional_id: profissional.id })
 
-        if (pacientes.length === 0) {
-            return res.status(404).json({ "mensagem": "Nenhuma paciente encontrada" })
-        }
+
 
         return res.status(200).json(pacientes)
     } catch (error) {
